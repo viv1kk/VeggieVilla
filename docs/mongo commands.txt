@@ -37,11 +37,11 @@ $gte, $gt, $lt, $lte
 
 
 db.users.find({name : {$in : ["Vivek", "ABC", "XYZ", ... ]}}) ---> $in = if value in the list.
-db.users.find({name : {$nin : ["Vivek", "ABC", "XYZ", ... ]})} ---> $nin = if value not in the list.
+db.users.find({name : {$nin : ["Vivek", "ABC", "XYZ", ... ]}}) ---> $nin = if value not in the list.
 
 
 
-db.users.find({age : { $exists : true }} ---> $exists = all the object having age property will be returned.
+db.users.find({age : { $exists : true }}) ---> $exists = all the object having age property will be returned.
 
 db.users.find({age : { age : {$gte : 20, $lte : 40}, name : "Vivek" }}) --- >age && name
 
@@ -49,9 +49,38 @@ db.users.find({ $and : [ { age : 26}, { name : "Vivek"}] }) ---> another way to 
 
 db.users.find({ $or : [ { age : 26}, { name : "Vivek"}] }) ---> way to perform OR on queries
 
-db.users.find({ $not : { { age : 26} }) ---> way to perform NOT on queries
+db.users.find({ $not : { { age : 26} }}) ---> way to perform NOT on queries
 
 db.users.find({ $expr : { $gt : ["$debt" , "$balance"] }}) --> debt and balance are two columns in the collection or and expr is used to create a expression by merging different queries
 
 
+db.users.find({"address.street" : "123 Maun St"})
+
+db.users.findOne({"address.street" : "123 Maun St"}) -->returns the first user
+
+db.users.coutDocuments({age : 23}) ---> returns the number of records
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+db.users.updateOne({age : 26}, {$set : { age : 27}}) 
+
+db.users.supdateOne({ age : 25 }, { $inc : {age : 3}}) --> age =  25 + 3 
+
+db.users.updateOne({age : 5}, { $rename : { name : "firstNmae"}}) --> renames the attribute name;
+
+db.users.updateOne({age : 5}, { $unset : { name : ""}}) --> removes the property
+
+db.users.updateOne({age : 5 }, { $push : { hobbies : "swimming"}}) --->inserts swimming to the list of hobbies
+
+db.users.updateOne({age : 5 }, { $pull : { hobbies : "swimming"}}) --->removes swimming to the list of hobbies
+
+db.users.updateMany({ address : { $exists : true}}, { $unset : { address : ""}} )
+
+db.users.replaceOne({ age : 30} , { name : "Vivek" })
+
+
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````
+
+db.users.deleteOne({name : "Vivek"}) --> deletes the record which have name == Vivek
 
