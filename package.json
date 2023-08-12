@@ -1,0 +1,22 @@
+{
+  "name": "veggievilla",
+  "version": "1.0.0",
+  "description": "https://viv1kk.github.io/VeggieVilla/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viv1kk/VeggieVilla.git"
+  },
+  "author": "Vivek Kohli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/viv1kk/VeggieVilla/issues"
+  },
+  "homepage": "https://github.com/viv1kk/VeggieVilla#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

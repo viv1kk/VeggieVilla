@@ -125,7 +125,7 @@ li{
     border:2px solid white;
 }
 .price::before{
-    content:"₹ "
+    content:"₹"
 }
 .quantity::after{
     content:" Kg"
@@ -202,3 +202,10 @@ li{
     border:3px solid white;
 }
 
+
+
+.basket-item:hover{
+    transition: all .1s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.377);
+    border-radius: 10px;
+}
