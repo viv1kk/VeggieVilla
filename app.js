@@ -1,36 +1,30 @@
 const express = require('express')
-const mongoose = require('mongoose')
+const path = require('path')
 const app = express()
 const port = 3000
-
-
-
-//Connet to MongoDB
-
-mongoose.connect('mongodb://localhost:27017/Veggies', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch(err => {
-  console.error('Error connecting to MongoDB:', err);
-});
-
-
-// const login = require('./routes/login')
-let path = require('path')
-
-app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine", "ejs")
 
-// app.use("/user", login)
+const connection = require('./models/connection')
+const user = require('./routes/auth');
+const auth = require('./middlewares/auth');
+const pantry = require('./routes/pantry')
 
-app.get('/', (req, res) => {
+app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  console.log("HTTP Method - " + req.method + ", URL - "+ req.url);
+  next();
+})
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use("/auth", user)
+app.use("/pantry", pantry)
+
+app.get('/', (req, res) => {  
   res.render("index")
 })
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard',  (req, res) => {
   res.render("pages/dashboard")
 })
 
