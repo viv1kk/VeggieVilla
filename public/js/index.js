@@ -55,34 +55,28 @@ let signup = ()=>{
     const password = document.getElementById("signup-password").value
     const confirm_password = document.getElementById("signup-confirm-password").value
 
-    const loginData = {
+    const signupData = {
         name: name,
         email: email,
         password: password,
         confirm_password: confirm_password
     };
     
-    axios.post('/auth/signup', loginData, {
+    axios.post('/auth/signup', signupData, {
         headers: {
             'Content-Type': 'application/json',
           }
         })
         .then(response => {
-            if(response.status == 201)
-            {
+            if(response.status == 201){
                 $.notify(response.data.message, "success");
             }
         })
         .catch(error => {
             const status = error.response.status
-            if(status == 401 ||status == 400 || status == 500)
-            {
+            if(status == 401 ||status == 400 || status == 500){
                 $.notify(error.response.data.message, "error");
             }
         });
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    // this.location.href = "/?token="+localStorage.getItem('token')
-});
