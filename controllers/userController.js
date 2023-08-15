@@ -23,8 +23,9 @@ const login =  async (req, res) => {
         }
 
         // Generating Token
-        const token = jwt.sign({ email : existingUser.email, id : existingUser._id }, SECRET_KEY);
-        res.status(201).json({ user : existingUser, token: token })
+        const token = jwt.sign({ email : existingUser.email, id : existingUser._id }, SECRET_KEY, { expiresIn : '1d'});
+        // res.status(201).json({ user : existingUser, token: token })
+        res.status(201).cookie('token', token).send('cookie set')
     }
     catch(error){
         console.log(error);

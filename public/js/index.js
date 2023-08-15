@@ -31,8 +31,11 @@ let login = ()=>{
         .then(response => {
             if(response.status == 201) // Login Successful
             {
-                let token = response.data.token;
-                location.assign("dashboard")
+                // let token = response.data.token;
+                // localStorage.setItem("token", token)
+                // // localStorage.clear("token")
+                // location.assign("dashboard?token="+localStorage.getItem("token"))
+                location.href = "/dashboard"
             }
         })
         .catch(error => {
@@ -78,3 +81,8 @@ let signup = ()=>{
             }
         });
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // this.location.href = "/?token="+localStorage.getItem('token')
+});
