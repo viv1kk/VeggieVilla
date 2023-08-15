@@ -35,7 +35,7 @@ let login = ()=>{
                 // localStorage.setItem("token", token)
                 // // localStorage.clear("token")
                 // location.assign("dashboard?token="+localStorage.getItem("token"))
-                location.href = "/dashboard"
+                location.assign("/dashboard")
             }
         })
         .catch(error => {
@@ -70,7 +70,7 @@ let signup = ()=>{
         .then(response => {
             if(response.status == 201)
             {
-                location.href = "/";
+                $.notify(response.data.message, "success");
             }
         })
         .catch(error => {

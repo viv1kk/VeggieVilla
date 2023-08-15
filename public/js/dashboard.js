@@ -106,10 +106,6 @@ window.addEventListener("load", (event) => {
             $.notify(error.response.data.message, "error");
         }
     });
-
-
-
-
 });
 
 

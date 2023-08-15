@@ -1,35 +1,39 @@
 const userModel = require("../models/User")
 const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken");
-
-const SECRET_KEY = "SECRETKEY"
-
+// const jwt = require("jsonwebtoken");
+// const SECRET_KEY = "SECRETKEY"
 
 const login =  async (req, res) => {
-    const { email, password } = req.body
-    console.log(req.body)
+    const { email, password, remember } = req.body
     try{
         // Existing User Check
         const existingUser = await userModel.findOne({ email : email })
         if(!existingUser){
             return res.status(404).json({ message : "User not found" })
         }
-
         // matching Password
         const matchPassword = await bcrypt.compare(password, existingUser.password);
-        if(!matchPassword)
-        {
+        if(!matchPassword){
             return res.status(400).json({ message : "Invalid Credentials" })
         }
-
-        // Generating Token
-        const token = jwt.sign({ email : existingUser.email, id : existingUser._id }, SECRET_KEY, { expiresIn : '1d'});
-        // res.status(201).json({ user : existingUser, token: token })
-        res.status(201).cookie('token', token).send('cookie set')
+        // Creating Session
+        req.session.email = existingUser.email;
+        res.status(201).json({ message : "Login Successful "})
     }
     catch(error){
         console.log(error);
         res.status(500).json({ message : "Something went wrong" });
+    }
+}
+
+const logout = (req, res) => {
+    if(req.session.email){
+        req.session.destroy()
+        console.log("Logged Out!")
+        res.status(201).json({ message : "Logged out"})
+    }
+    else{
+        res.status(201).json({ message : "Session Not Found!"})
     }
 }
 
@@ -59,9 +63,7 @@ const signup = async (req, res) => {
             password : hashedPassword,
         })
 
-        // Token Generate
-        const token = jwt.sign({ email : result.email, id : result._id }, SECRET_KEY);
-        res.status(201).json({ user : result, token: token })
+        res.status(201).json({ message : "Account Created!"})
     }
     catch(error){
         console.log(error);
@@ -69,4 +71,21 @@ const signup = async (req, res) => {
     }
 }
 
-module.exports = { login, signup };
+const deleteUser = async(req, res)=>{
+    const { email } = req.body
+    try{
+        // Existing User Check
+        const existingUser = await userModel.findOne({ email : email })
+        if(!existingUser){
+            return res.status(404).json({ message : "User not found" })
+        }
+        await userModel.deleteOne({ email : email })
+        res.status(201).json({ message : "Deleted User Successful ", user : existingUser})
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({ message : "Something went wrong" });
+    }
+}
+
+module.exports = { login, logout, signup, deleteUser };

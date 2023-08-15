@@ -103,6 +103,9 @@ header{
 
 }
 
+.dropdown-item{
+    cursor: pointer;
+}
 
 .dropdown-item:hover{
     background-color: #88ce78e6;
