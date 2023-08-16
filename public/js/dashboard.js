@@ -1,34 +1,7 @@
-// const items = [{
-//     _id : 1,
-//     img : "../assets/apple.jpg",
-//     item_name : "Apple",
-//     item_category : "Fruit",
-//     item_quantity : 1,
-//     item_price : 10.00
-// },
-// {
-//     id : 1,
-//     img : "../assets/cauli.jpg",
-//     item_name : "Apple",
-//     item_category : "Fruit",
-//     item_quantity : 1,
-//     item_price : 10.00
-// },
-// {
-//     id : 1,
-//     img : "../assets/apple.jpg",
-//     item_name : "Apple",
-//     item_category : "Fruit",
-//     item_quantity : 1,
-//     item_price : 10.00
-// }
-// ]
-
-
 function individualItem(item)
 {
     return `
-    <div class="container-item">
+    <div class="container-item" >
         <div class="image-content">
             <img src=${item.img} alt="">
         </div>
@@ -88,7 +61,11 @@ const loadDatainDOM = (items)=>{
 
 const addtoCart = (e)=>{
     const itemId = e.target.parentNode.id;
-    console.log(itemId)
+    const itemName = e.target.parentNode.parentNode.previousElementSibling.innerText
+    console.log(itemId, itemName);
+
+    $.notify(`Added to cart : ${itemName}`, "success");
+
 }
 
 window.addEventListener("load", (event) => {

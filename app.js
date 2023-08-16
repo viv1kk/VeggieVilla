@@ -28,7 +28,7 @@ app.use(session({
   resave : false,
   saveUninitialized : false,
 
-  cookie: { maxAge: 60*1000 }
+  cookie: { maxAge: 60*5*1000 }
 }))
 app.use("/auth", user)
 app.use("/pantry", pantry)
