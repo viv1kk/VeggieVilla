@@ -17,7 +17,7 @@ const login =  async (req, res) => {
             return res.status(400).json({ message : "Invalid Credentials" })
         }
         // Creating Session
-        req.session.email = existingUser.email;
+        req.session.userid = existingUser._id;
         res.status(201).json({ message : "Login Successful "})
     }
     catch(error){
@@ -27,7 +27,7 @@ const login =  async (req, res) => {
 }
 
 const logout = (req, res) => {
-    if(req.session.email){
+    if(req.session.userid){
         req.session.destroy()
         console.log("Logged Out!")
         res.status(201).json({ message : "Logged out"})

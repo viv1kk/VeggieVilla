@@ -31,10 +31,6 @@ let login = ()=>{
         .then(response => {
             if(response.status == 201) // Login Successful
             {
-                // let token = response.data.token;
-                // localStorage.setItem("token", token)
-                // // localStorage.clear("token")
-                // location.assign("dashboard?token="+localStorage.getItem("token"))
                 location.assign("/dashboard")
             }
         })

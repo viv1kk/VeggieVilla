@@ -1,7 +1,7 @@
 
 const auth = (req, res, next) => {
     try{
-     if(req.session.email)
+     if(req.session.userid)
         {
             console.log("Authenticated link ^")
             next()

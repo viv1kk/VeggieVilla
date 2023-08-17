@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/user.css">
 </head>
 <body>
     <div class="main-div">
@@ -24,7 +24,7 @@
                             <i class="fa-solid fa-circle-user fa-xl"></i>
                             </a>
                             <div class="dropdown">
-                                <a class="dropdown-item" href="#">User</a>
+                                <a class="dropdown-item" href="/user">User</a>
                                 <a class="dropdown-item" onclick="logout()">Logout</a>
                             </div>
                         </li>
@@ -34,6 +34,38 @@
         </header>
         <main class="">
             <div class="form">
+                <div class="col-1">
+                    <h3 class="heading">User Details</h3>
+                    <div class="user-dp">
+                        <img src="../assets/default-user.png">
+                        <span>User</span>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label class="label">Full Name<br>
+                        <input type="text" id="user-fullname" class="field" placeholder="Full Name" disabled>
+                    </label>
+                    <label class="label">Mobile Number<br>
+                        <input type="text" id="user-mobile" class="field" placeholder="Mobile Number">
+                    </label>
+                    <label class="label">Email ID<br>
+                        <input type="email" id="user-email" class="field" placeholder="Email ID">
+                    </label>
+                    <label class="label">Gender<br>
+                        <!-- <input type="text" id="user-gender" class="field" placeholder="Gender"> -->
+                        <select id="cars" class="field">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                    </label>
+                    <label class="label">Date of Birth<br>
+                        <input type="date" id="user-gender" class="field" placeholder="Gender">
+                    </label>
+                    <label class="label">Location<br>
+                        <textarea id="user-address"  class="field" placeholder="Location / Address"></textarea>
+                    </label>
+                    <button type="button" class="btn" onclick="">Edit-Details</button>
+                </div>
             </div>
         </main>
         <footer class="blend">
@@ -46,6 +78,7 @@
     </div>
     <script src="../js/navbar.js"></script>
     <script src="../js/logout.js"></script>
+    <script src="../js/user.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://kit.fontawesome.com/1d390f795c.js" crossorigin="anonymous"></script>
 </body>

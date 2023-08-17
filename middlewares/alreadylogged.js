@@ -1,6 +1,6 @@
 const alreadylogged = (req, res, next) => {
     try{
-        if(req.session.email)
+        if(req.session.userid)
         {
             res.redirect('/dashboard')
         }

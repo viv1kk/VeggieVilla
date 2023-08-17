@@ -28,14 +28,14 @@ app.use(session({
   resave : false,
   saveUninitialized : false,
 
-  cookie: { maxAge: 60*5*1000 }
+  cookie: { maxAge: 60*60*1000 }
 }))
 app.use("/auth", user)
 app.use("/pantry", pantry)
 
 
 const isAuthenticated = (req)=>{
-  if(req.session.email){
+  if(req.session.userid){
     return 1;
   }
   return 0;
@@ -47,6 +47,10 @@ app.get('/', alreadylogged, (req, res) => {
 
 app.get('/dashboard', auth, (req, res) => {
   res.render("pages/dashboard")
+})
+
+app.get('/user', auth, (req, res) => {
+  res.render("pages/user")
 })
 
 app.get('/cart', auth, (req, res) => {
