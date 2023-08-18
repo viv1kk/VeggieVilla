@@ -54,6 +54,8 @@ db.users.find({ $not : { { age : 26} }}) ---> way to perform NOT on queries
 db.users.find({ $expr : { $gt : ["$debt" , "$balance"] }}) --> debt and balance are two columns in the collection or and expr is used to create a expression by merging different queries
 
 
+db.users.find({awards: {$elemMatch: {award:'National Medal', year:1975}}})
+
 db.users.find({"address.street" : "123 Maun St"})
 
 db.users.findOne({"address.street" : "123 Maun St"}) -->returns the first user
@@ -65,7 +67,7 @@ db.users.coutDocuments({age : 23}) ---> returns the number of records
 
 db.users.updateOne({age : 26}, {$set : { age : 27}}) 
 
-db.users.supdateOne({ age : 25 }, { $inc : {age : 3}}) --> age =  25 + 3 
+db.users.updateOne({ age : 25 }, { $inc : {age : 3}}) --> age =  25 + 3 
 
 db.users.updateOne({age : 5}, { $rename : { name : "firstNmae"}}) --> renames the attribute name;
 
@@ -76,6 +78,7 @@ db.users.updateOne({age : 5 }, { $push : { hobbies : "swimming"}}) --->inserts s
 db.users.updateOne({age : 5 }, { $pull : { hobbies : "swimming"}}) --->removes swimming to the list of hobbies
 
 db.users.updateMany({ address : { $exists : true}}, { $unset : { address : ""}} )
+
 
 db.users.replaceOne({ age : 30} , { name : "Vivek" })
 

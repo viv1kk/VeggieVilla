@@ -58,7 +58,7 @@ let signup = ()=>{
         confirm_password: confirm_password
     };
     
-    axios.post('/auth/signup', signupData, {
+    axios.post('/user/signup', signupData, {
         headers: {
             'Content-Type': 'application/json',
           }

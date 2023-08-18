@@ -10,7 +10,9 @@
     --bgImage: url('../assets/image.png');
     --lingrad1: rgba(88, 92, 90, 0.634);
     --lingrad2: rgba(0, 0, 0, 0.896);
-    --navlink-color: green
+    --navlink-color: green;
+    --btnColor : rgba(122, 15, 223, 0.947);
+    --btnHover :    rgba(123, 15, 223, 0.736);
      /* rgb(247, 247, 243); */
 }
 
@@ -175,13 +177,13 @@ main{
     padding: 0.5rem;
     width : 120px;
     cursor: pointer;
-    background-color: rgba(122, 15, 223, 0.947);
+    background-color: var(--btnColor);
     color: white;
     border-radius: 5px;
     border:0px;
 }
 .btn:hover{
-    background-color: rgba(123, 15, 223, 0.736);
+    background-color: var(--btnHover);
     
 }
 

@@ -8,11 +8,12 @@ app.set("view engine", "ejs")
 
 
 const connection = require('./models/connection')
-const user = require('./routes/auth');
-const auth = require('./middlewares/auth');
+const authRoute = require('./routes/auth');
+const secure = require('./middlewares/auth');
 const alreadylogged = require('./middlewares/alreadylogged');
-const pantry = require('./routes/pantry')
-
+const pantryRoute = require('./routes/pantry')
+const userRoute = require("./routes/user")
+const cartRoute = require("./routes/cart")
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use(express.json())
+app.use(express.json({limit : '50mb'}))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(session({
@@ -30,9 +31,10 @@ app.use(session({
 
   cookie: { maxAge: 60*60*1000 }
 }))
-app.use("/auth", user)
-app.use("/pantry", pantry)
-
+app.use("/auth", authRoute)
+app.use("/pantry", pantryRoute)
+app.use("/user", userRoute)
+app.use("/cart", cartRoute)
 
 const isAuthenticated = (req)=>{
   if(req.session.userid){
@@ -45,15 +47,15 @@ app.get('/', alreadylogged, (req, res) => {
   res.render("index")
 })
 
-app.get('/dashboard', auth, (req, res) => {
+app.get('/dashboard', secure, (req, res) => {
   res.render("pages/dashboard")
 })
 
-app.get('/user', auth, (req, res) => {
+app.get('/user', secure, (req, res) => {
   res.render("pages/user")
 })
 
-app.get('/cart', auth, (req, res) => {
+app.get('/cart', secure, (req, res) => {
   res.render("pages/cart")
 })
 
@@ -68,8 +70,12 @@ app.get('/contact', (req, res) => {
 })
 
 
-app.all('*', (req, res) =>{
+app.get('*', (req, res) =>{
   res.redirect("/");
+});
+
+app.post('*', (req, res) =>{
+  res.status(400).json({ message : "This route does not exist!" });
 });
 
 

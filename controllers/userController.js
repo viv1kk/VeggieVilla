@@ -1,41 +1,6 @@
+const session = require("express-session")
 const userModel = require("../models/User")
 const bcrypt = require("bcrypt")
-// const jwt = require("jsonwebtoken");
-// const SECRET_KEY = "SECRETKEY"
-
-const login =  async (req, res) => {
-    const { email, password, remember } = req.body
-    try{
-        // Existing User Check
-        const existingUser = await userModel.findOne({ email : email })
-        if(!existingUser){
-            return res.status(404).json({ message : "User not found" })
-        }
-        // matching Password
-        const matchPassword = await bcrypt.compare(password, existingUser.password);
-        if(!matchPassword){
-            return res.status(400).json({ message : "Invalid Credentials" })
-        }
-        // Creating Session
-        req.session.userid = existingUser._id;
-        res.status(201).json({ message : "Login Successful "})
-    }
-    catch(error){
-        console.log(error);
-        res.status(500).json({ message : "Something went wrong" });
-    }
-}
-
-const logout = (req, res) => {
-    if(req.session.userid){
-        req.session.destroy()
-        console.log("Logged Out!")
-        res.status(201).json({ message : "Logged out"})
-    }
-    else{
-        res.status(201).json({ message : "Session Not Found!"})
-    }
-}
 
 const signup = async (req, res) => {
     
@@ -71,6 +36,7 @@ const signup = async (req, res) => {
     }
 }
 
+
 const deleteUser = async(req, res)=>{
     const { email } = req.body
     try{
@@ -88,4 +54,29 @@ const deleteUser = async(req, res)=>{
     }
 }
 
-module.exports = { login, logout, signup, deleteUser };
+const getUserProfile = async (req, res)=>{
+    // res.status(201).json({ message : req.session.userid})
+    // TODO: filter the data before sending the data  
+    const userid = req.session.userid;
+    const userinfo = await userModel.findOne({_id : userid });
+    res.status(201).json(userinfo)
+}
+
+const updateUserProfile = async (req, res)=>{ 
+    const userid = req.session.userid;
+    let data = req.body
+    // assuming data comes filtered.
+    try{
+        const status = await userModel.updateOne({_id : userid },{$set : req.body});
+        const updatedinfo = await userModel.findOne({ _id : userid })
+        res.status(201).json({ update_status : status, userinfo : updatedinfo })
+    }
+    catch(error)
+    {
+        res.status(400).json({ error : "Something just broke"})
+    }
+}
+
+
+
+module.exports = { signup, deleteUser, getUserProfile, updateUserProfile }
