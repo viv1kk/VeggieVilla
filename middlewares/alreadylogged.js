@@ -1,6 +1,7 @@
 const alreadylogged = (req, res, next) => {
+    
     try{
-        if(req.session.userid){
+        if(req.cookies.userid){
             res.redirect('/dashboard')
         }
         else{

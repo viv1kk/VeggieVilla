@@ -9,17 +9,18 @@ const editbtn = document.getElementById('edit-details-btn')
 const updatebtn = document.getElementById('update-details-btn')
 
 const toggleinput = () =>{
-    fullName.readOnly  = !fullName.readOnly
-    mobile.readOnly  = !mobile.readOnly
-    email.readOnly  = !email.readOnly
+    fullName.disabled  = !fullName.disabled
+    mobile.disabled  = !mobile.disabled
+    email.disabled  = !email.disabled
     gender.disabled  = !gender.disabled
-    dob.readOnly  = !dob.readOnly
-    addr.readOnly  = !addr.readOnly
+    dob.disabled  = !dob.disabled
+    addr.disabled  = !addr.disabled
     editbtn.classList.toggle("hide");
     updatebtn.classList.toggle("hide");
 }
 
 const populateDataOnDOM = (data)=>{
+    // console.log(data.img)
     profilePic.src = data.img;
     fullName.value = data.name;
     mobile.value = data.mob;
@@ -30,26 +31,22 @@ const populateDataOnDOM = (data)=>{
 }
 
 const updateProfilePic = async()=>{
-
     const sendImagetoSever = async(imageAsURL)=>{
         const data = {
             img : imageAsURL
         }
-        axios.post('/user/update-user-profile', data)
+        await axios.post('/user/update-user-profile', data)
         .then(response => {
-            if(response.status == 201) // data received
-            {
-                loadDatainDOM(response.data);
+            if(response.status == 201){
+                populateDataOnDOM(response.data.userinfo);
             }
         })
         .catch(error => {
             const status = error.response.status
-            if(status == 404 ||status == 400 || status == 500)
-            {
+            if(status == 404 ||status == 400 || status == 500){
                 $.notify(error.response.data.message, "error");
             }
-        });
-        
+        }); 
     }
 
     await Swal.fire({
@@ -69,8 +66,8 @@ const updateProfilePic = async()=>{
             else{
                 console.log(result.value)
                 const reader = new FileReader()
-                reader.onload = (e) => {
-                    sendImagetoSever(e.target.result)
+                reader.onload = async (e) => {
+                    await sendImagetoSever(e.target.result)
                     // console.log(e.target.result)
                 }
                 reader.readAsDataURL(result.value)
@@ -100,11 +97,11 @@ const update = ()=>{
         .then(response => {
             if(response.status == 201){
                 const data = response.data
-                console.log(response.data)
                 if(data.update_status.acknowledged === true)
                 {
                     populateDataOnDOM(data.userinfo);
                     $.notify("Changes were made Successfully!", "success");
+                    toggleinput()
                 }
                 else{
                     $.notify("Database Acknowledgement : Failed", "error");
@@ -127,18 +124,18 @@ window.addEventListener("DOMContentLoaded", async (event) => {
     await axios.post('/user/get-user-profile', {
         headers: {
             'Content-Type': 'application/json',
-          }
-        })
-        .then(response => {
-            if(response.status == 201){
-                const data = response.data
-                populateDataOnDOM(data);
-            }
-        })
-        .catch(error => {
-            const status = error.response.status
-            if(status == 401 ||status == 400 || status == 500){
-                $.notify(error.response.data.message, "error");
-            }
-        });
+        }
+    })
+    .then(response => {
+        if(response.status == 201){
+            const data = response.data
+            populateDataOnDOM(data);
+        }
+    })
+    .catch(error => {
+        const status = error.response.status
+        if(status == 401 ||status == 400 || status == 500){
+            $.notify(error.response.data.message, "error");
+        }
+    });
 })

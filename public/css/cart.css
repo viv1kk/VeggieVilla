@@ -201,6 +201,12 @@ li{
     color:white;
     border:3px solid white;
 }
+.remove:hover{
+    background-color: white;
+    transition: all .3s ease-in-out;
+    
+    color:black;
+}
 
 
 

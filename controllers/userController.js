@@ -1,4 +1,3 @@
-const session = require("express-session")
 const userModel = require("../models/User")
 const bcrypt = require("bcrypt")
 
@@ -57,13 +56,13 @@ const deleteUser = async(req, res)=>{
 const getUserProfile = async (req, res)=>{
     // res.status(201).json({ message : req.session.userid})
     // TODO: filter the data before sending the data  
-    const userid = req.session.userid;
+    const userid = req.cookies.userid;
     const userinfo = await userModel.findOne({_id : userid });
     res.status(201).json(userinfo)
 }
 
 const updateUserProfile = async (req, res)=>{ 
-    const userid = req.session.userid;
+    const userid = req.cookies.userid;
     let data = req.body
     // assuming data comes filtered.
     try{

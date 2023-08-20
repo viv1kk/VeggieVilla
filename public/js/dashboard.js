@@ -1,5 +1,4 @@
-function individualItem(item)
-{
+const individualItem = (item)=>{
     return `
     <div class="container-item" >
         <div class="image-content">
@@ -9,15 +8,14 @@ function individualItem(item)
             <h3 class="item-name">${item.item_name}</h3>
             <div class="item-info">
                 <span><span>${item.item_available_qt}</span> Kg</span>
-                <button class="btn" id=${item._id} onclick=addtoCart(event)><i class="fa-solid fa-cart-plus fa-2xl"></i></button>
+                <button class="btn" id=${item._id} onclick="addtoCart('${item._id}', '${item.item_name}')"><i class="fa-solid fa-cart-plus fa-2xl"></i></button>
                 <span><i class="fa-solid fa-indian-rupee-sign"></i> <span>${parseFloat(item.item_price).toFixed(2)}</span></span>
             </div>
         </div>
     </div>`
 }
 
-function createSection(section_Heading, items)
-{
+const createSection = (section_Heading, items)=>{
     const section = document.createElement('section')
     section.classList.add("item-section"); 
 
@@ -59,13 +57,25 @@ const loadDatainDOM = (items)=>{
     }
 }
 
-const addtoCart = (e)=>{
-    const itemId = e.target.parentNode.id;
-    const itemName = e.target.parentNode.parentNode.previousElementSibling.innerText
-    console.log(itemId, itemName);
+const addtoCart = async (itemId, itemName)=>{
+    const data = {
+        itemid : itemId,
+        quantity : 1
+    }
 
-    $.notify(`Added to cart : ${itemName}`, "success");
-
+    await axios.post('/cart/update-cart', data)
+    .then(response => {
+        if(response.status == 201){
+            $.notify(`Added to cart : ${itemName}`, "success");
+        }
+    })
+    .catch(error => {
+        const status = error.response.status
+        if(status == 404 ||status == 400 || status == 500)
+        {
+            $.notify(error.response.data.message, "error");
+        }
+    });
 }
 
 window.addEventListener("load", (event) => {

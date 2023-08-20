@@ -16,6 +16,7 @@ const login =  async (req, res) => {
         }
         // Creating Session
         req.session.userid = existingUser._id;
+        res.cookie('userid', existingUser._id, { maxAge: 60*60*1000, httpOnly: true });
         res.status(201).json({ message : "Login Successful "})
     }
     catch(error){
@@ -25,7 +26,8 @@ const login =  async (req, res) => {
 }
 
 const logout = (req, res) => {
-    if(req.session.userid){
+    if(req.session.userid || req.cookies.userid){
+        res.clearCookie('userid')
         req.session.destroy()
         console.log("Logged Out!")
         res.status(201).json({ message : "Logged out"})

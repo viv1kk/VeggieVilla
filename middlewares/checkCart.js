@@ -2,7 +2,7 @@ const cartModel = require("../models/Cart")
 
 const checkCart = async (req, res, next) => {
     try{
-        const userid = req.session.userid;
+        const userid = req.cookies.userid;
         const findCart = await cartModel.findOne({ userid : userid })
         if(!findCart)
         {
@@ -17,7 +17,6 @@ const checkCart = async (req, res, next) => {
     catch(error)
     {
         console.log("User not Logged in! -> Error in checkCart");
-
         next()
     }
 }

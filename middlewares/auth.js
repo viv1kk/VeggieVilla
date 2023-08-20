@@ -1,7 +1,7 @@
-
+//not secure 
 const auth = (req, res, next) => {
     try{
-     if(req.session.userid)
+     if(req.cookies.userid)
         {
             console.log("Authenticated link ^")
             next()

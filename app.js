@@ -37,7 +37,7 @@ app.use("/user", userRoute)
 app.use("/cart", cartRoute)
 
 const isAuthenticated = (req)=>{
-  if(req.session.userid){
+  if(req.cookies.userid){
     return 1;
   }
   return 0;
