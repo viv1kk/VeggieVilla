@@ -59,8 +59,8 @@
     object-fit: cover;
 }
 .user-dp > img:hover{
-    border:5px solid lightgreen;
-    filter:brightness(90%);
+    border:10px solid lightgreen;
+    filter:brightness(80%);
     transition: all .3s ease-in-out; 
 }
 .user-dp > span{

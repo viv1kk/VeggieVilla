@@ -1,3 +1,31 @@
+/*************************Checkout Section******************************* */
+
+const checkout = async()=>{
+    const data = {
+        items : [
+            { id : 1, quantity : 3 },
+            { id : 2, quantity : 1 }
+        ]
+    }
+    await axios.post('/checkout/create-checkout-session', data)
+    .then(response => {
+        console.log(response.data)
+        if(response.status === 201) return response.data
+        return response.json().then(json => Promise.reject(json))
+    })
+    .then(({url}) =>{
+        window.location.assign(url)
+        // console.log(url)
+    })
+    .catch(error => {
+        const status = error.response.status
+        if(status == 404 ||status == 400 || status == 500){
+            $.notify(error.response.data.message, "error");
+        }
+    });
+}
+
+/********************************************************************** */
 /*********************** Quantity Change Section ************************************* */
 const updateCart = async (itemid, changeby)=>{
     
@@ -153,7 +181,7 @@ const checkoutHTMLComponent = (data)=>{
         <h4>TOTAL</h4>
         <span id="cart-total-final-price" class="price">${grandtotal.toFixed(2)}</span>
     </div>
-    <button class="remove">GO TO SECURE CHECKOUT</button>
+    <button class="remove" onclick=checkout()>GO TO SECURE CHECKOUT</button>
     `
 }
 
@@ -187,10 +215,6 @@ const getCartData = async()=>{
         });
     return data
 }
-
-
-
-
 
 /**************************************************************************************************** */
 

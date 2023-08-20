@@ -1,4 +1,6 @@
+require('dotenv').config()
 const express = require('express')
+
 const path = require('path')
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
@@ -14,6 +16,7 @@ const alreadylogged = require('./middlewares/alreadylogged');
 const pantryRoute = require('./routes/pantry')
 const userRoute = require("./routes/user")
 const cartRoute = require("./routes/cart")
+const checkoutRoute = require("./routes/checkout")
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
@@ -35,6 +38,7 @@ app.use("/auth", authRoute)
 app.use("/pantry", pantryRoute)
 app.use("/user", userRoute)
 app.use("/cart", cartRoute)
+app.use("/checkout", checkoutRoute)
 
 const isAuthenticated = (req)=>{
   if(req.cookies.userid){
