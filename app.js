@@ -48,33 +48,40 @@ const isAuthenticated = (req)=>{
 }
 
 app.get('/', alreadylogged, (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("index")
 })
 
 app.get('/dashboard', secure, (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("pages/dashboard")
 })
 
 app.get('/user', secure, (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("pages/user")
 })
 
 app.get('/cart', secure, (req, res) => {
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("pages/cart")
 })
 
 app.get('/about', (req, res) => {
   let auth = isAuthenticated(req)
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("pages/about",{ auth })
 })  
 
 app.get('/contact', (req, res) => {
   let auth = isAuthenticated(req)
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.render("pages/contact", { auth })
 })
 
 
 app.get('*', (req, res) =>{
+  res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.redirect("/");
 });
 
