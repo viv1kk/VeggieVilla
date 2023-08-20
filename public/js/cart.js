@@ -10,6 +10,7 @@ const updateCart = async (itemid, changeby)=>{
         else{
             item.remove()
         }
+        loadCheckoutDOM()
     }
     /***********************************************************************************/
 
@@ -24,6 +25,7 @@ const updateCart = async (itemid, changeby)=>{
             // $.notify(response.data.message, "success");
             console.log(response.data)
             updateHtmlComponent(response.data.result)
+            loadCheckoutDOM()
         }
     })
     .catch(error => {
@@ -53,6 +55,7 @@ const removeItemFromCart = async (itemid)=>{
                 
                 console.log(response.data)
                 deleteFromDOM(response.data.result._id)
+                loadCheckoutDOM()
             }
         })
         .catch(error => {
@@ -103,9 +106,8 @@ const individualItem = (item)=>{
     return basket;
 }
 
-const loadDatainDOM = (data)=>{
+const loadCartDOM = (data)=>{
     const cartItems = document.getElementById('cart-items')
-    console.log(data)
 
     // sort by CreatedAt in recent first order
     data = data.sort(function(a, b) {
@@ -113,24 +115,67 @@ const loadDatainDOM = (data)=>{
         var d = new Date(b.createdAt);
         return d-c;
     });
-    
-        console.log(data)
+
     data.forEach(element => {
         const item = individualItem(element)
         cartItems.appendChild(item) 
     });
 }
 
-/**************************************************************************************************** */
+const checkoutHTMLComponent = (data)=>{
+    let totalCartValue = 0;
+    // calculate gst, delivery, total
+    data.forEach(e => {
+        totalCartValue += e.item_price*e.quantity
+    });
 
+    let gst = 0.18*totalCartValue;
+    let delivery = 0.05*totalCartValue
+    let grandtotal = totalCartValue+gst+delivery
 
-window.addEventListener("load", async(event) => {
+    return `
+    <div class="total-subsection">
+        <div class="subtotal">
+            <span>Subtotal</span>
+            <span id="cart-total-subtotal" class="price">${totalCartValue.toFixed(2)}</span>
+        </div>
+        <div class="subtotal small">
+            <span>GST (18%)</span>
+            <span id="cart-total-subtotal" class="price">${gst.toFixed(2)}</span>
+        </div>
+        <div class="subtotal small">
+            <span>Delivery (5%)</span>
+            <span id="cart-total-subtotal" class="price">${delivery.toFixed(2)}</span>
+        </div>
+        <div class="cart-total-promo"></div>
+    </div>
+    <div class="grand-total">
+        <h4>TOTAL</h4>
+        <span id="cart-total-final-price" class="price">${grandtotal.toFixed(2)}</span>
+    </div>
+    <button class="remove">GO TO SECURE CHECKOUT</button>
+    `
+}
+
+const loadCheckoutDOM = async()=>{
+    let data = await getCartData()
+    const cartChk = document.getElementById('cart-total')
+    cartChk.innerHTML = checkoutHTMLComponent(data)
+}
+
+const loadDatainDOM = (data)=>{
+    loadCartDOM(data)
+    loadCheckoutDOM()
+}
+
+const getCartData = async()=>{
+    let data = []
     await axios.post('/cart/get-current-cart-items')
         .then(response => {
             if(response.status == 201) // data received
             {
                 // console.log(response.data)
-                loadDatainDOM(response.data.cartItems);
+                data = response.data.cartItems
             }
         })
         .catch(error => {
@@ -140,5 +185,17 @@ window.addEventListener("load", async(event) => {
                 $.notify(error.response.data.message, "error");
             }
         });
+    return data
+}
+
+
+
+
+
+/**************************************************************************************************** */
+
+window.addEventListener("load", async(event) => {
+    const data = await getCartData()
+    loadDatainDOM(data);
 });
 

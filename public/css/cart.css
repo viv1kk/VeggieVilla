@@ -6,7 +6,6 @@ main{
 .btn{
     padding:10px;
     border-radius: 0;
-
 }
 
 .container {
@@ -208,10 +207,18 @@ li{
     color:black;
 }
 
-
-
 .basket-item:hover{
     transition: all .1s ease-in-out;
     background-color: rgba(0, 0, 0, 0.377);
     border-radius: 10px;
+}
+
+.subtotal{
+    padding:.5rem
+}
+
+.small{
+    font-size: smaller;
+    padding-left: 1.5rem;
+    color:gainsboro
 }
