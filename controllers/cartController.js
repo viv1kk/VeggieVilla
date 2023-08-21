@@ -58,7 +58,7 @@ const updateCartItem = async (req, res, next)=>{
             req.body = {
                 itemid : data.itemid
             }
-            console.log("Removing")
+            console.log("Removing Item From Cart")
             removeCurrentCartItem(req, res);
             return 0
         }
@@ -87,7 +87,6 @@ const updateCartItem = async (req, res, next)=>{
         }
         result = await cartModel.findOne({"userid": userid},{"cartItems": {$elemMatch: {itemid : itemid}}})
         const cart =  await insertItemInfoInCartItemsHELPER(result)
-        console.log(cart)
         // check quantity zero -> if zero remove from database
         if(checkQuantityZero(cart[0]))
             res.status(201).json({message : "Updated the Cart", result : cart[0]})
