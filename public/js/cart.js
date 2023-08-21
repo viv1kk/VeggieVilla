@@ -151,42 +151,32 @@ const loadCartDOM = (data)=>{
 }
 
 const checkoutHTMLComponent = (data)=>{
-    let totalCartValue = 0;
-    // calculate gst, delivery, total
-    data.forEach(e => {
-        totalCartValue += e.item_price*e.quantity
-    });
-
-    let gst = 0.18*totalCartValue;
-    let delivery = 0.05*totalCartValue
-    let grandtotal = totalCartValue+gst+delivery
-
     return `
     <div class="total-subsection">
         <div class="subtotal">
             <span>Subtotal</span>
-            <span id="cart-total-subtotal" class="price">${totalCartValue.toFixed(2)}</span>
+            <span id="cart-total-subtotal" class="price">${data.totalCartValue.toFixed(2)}</span>
         </div>
         <div class="subtotal small">
             <span>GST (18%)</span>
-            <span id="cart-total-subtotal" class="price">${gst.toFixed(2)}</span>
+            <span id="cart-total-subtotal" class="price">${data.gst.toFixed(2)}</span>
         </div>
         <div class="subtotal small">
             <span>Delivery (5%)</span>
-            <span id="cart-total-subtotal" class="price">${delivery.toFixed(2)}</span>
+            <span id="cart-total-subtotal" class="price">${data.deliveryCharge.toFixed(2)}</span>
         </div>
         <div class="cart-total-promo"></div>
     </div>
     <div class="grand-total">
         <h4>TOTAL</h4>
-        <span id="cart-total-final-price" class="price">${grandtotal.toFixed(2)}</span>
+        <span id="cart-total-final-price" class="price">${data.grandTotal.toFixed(2)}</span>
     </div>
     <button class="remove" onclick=checkout()>GO TO SECURE CHECKOUT</button>
     `
 }
 
 const loadCheckoutDOM = async()=>{
-    let data = await getCartData()
+    let data = await getCheckoutData()
     const cartChk = document.getElementById('cart-total')
     cartChk.innerHTML = checkoutHTMLComponent(data)
 }
@@ -196,13 +186,33 @@ const loadDatainDOM = (data)=>{
     loadCheckoutDOM()
 }
 
+const getCheckoutData = async()=>{
+    let data
+    await axios.post('/cart/get-checkout-data')
+        .then(response => {
+            if(response.status == 201) // data received
+            {
+                // console.log(response.data)
+                data = response.data.checkoutData
+            }
+        })
+        .catch(error => {
+            const status = error.response.status
+            if(status == 404 ||status == 400 || status == 500)
+            {
+                $.notify(error.response.data.message, "error");
+            }
+        });
+    return data
+}
+
 const getCartData = async()=>{
     let data = []
     await axios.post('/cart/get-current-cart-items')
         .then(response => {
             if(response.status == 201) // data received
             {
-                // console.log(response.data)
+                // console.logs(response.data)
                 data = response.data.cartItems
             }
         })

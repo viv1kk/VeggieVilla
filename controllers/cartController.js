@@ -1,40 +1,27 @@
 const cartModel = require("../models/Cart")
 const pantryModel = require("../models/Pantry")
-
-
-
-//helper function
-const insertItemInfoInCartItems = async (resl)=>{
-    const len = resl.cartItems.length
-    let data = []
-    for (let i = 0; i < len; i++)
-    {
-        let copy = JSON.parse(JSON.stringify(resl.cartItems[i]))
-        const pantryItem = await pantryModel.findOne({_id : copy.itemid})
-        if(pantryItem)
-        {
-            copy.item_img = pantryItem.img
-            copy.item_name = pantryItem.item_name
-            copy.item_price = pantryItem.item_price
-            data.push(copy);
-        }
-    }
-    return data
-}
+const { insertItemInfoInCartItemsHELPER } = require('../middlewares/addCheckoutANDCartData')
 
 const getCurrentCartItems = async (req, res)=>{
-    
-    const userid = req.cookies.userid
     // Also make check whether ther item is avaliable
     try{
-        const result = await cartModel.findOne({"userid": userid})
-        const cart =  await insertItemInfoInCartItems(result)
-        res.status(201).json({cartItems : cart})
+        const cartItems = req.cartItems
+        res.status(201).json({cartItems})
     }
-    catch(error)
-    {
+    catch(error){
         console.log(error);
         res.status(500).json({error : error})
+    }
+}
+
+const getCheckoutData = async (req, res)=>{
+    try{
+        const checkoutData = req.checkoutData
+        res.status(201).json({ checkoutData : checkoutData })
+    }
+    catch(error){
+        console.log(error.message);
+        res.status(500).json({error : error.message})
     }
 }
 
@@ -88,6 +75,8 @@ const updateCartItem = async (req, res, next)=>{
     try{
         let result = await cartModel.findOne({"userid": userid},{"cartItems": {$elemMatch: {itemid : itemid}}})
         if(result.cartItems.length === 0){
+        // if(req.cartItems.length === 0){
+
             await cartModel.updateOne({userid : userid}, {$push : { cartItems : {itemid : itemid, quantity:quantity, createdAt : new Date() }}})
         }
         else{
@@ -97,8 +86,8 @@ const updateCartItem = async (req, res, next)=>{
                 { new: true })
         }
         result = await cartModel.findOne({"userid": userid},{"cartItems": {$elemMatch: {itemid : itemid}}})
-        const cart =  await insertItemInfoInCartItems(result)
-
+        const cart =  await insertItemInfoInCartItemsHELPER(result)
+        console.log(cart)
         // check quantity zero -> if zero remove from database
         if(checkQuantityZero(cart[0]))
             res.status(201).json({message : "Updated the Cart", result : cart[0]})
@@ -125,4 +114,4 @@ const removeCart = async (req, res)=>{
     }
 }
 
-module.exports = { getCurrentCartItems, removeCurrentCartItem, updateCartItem, removeCart }
+module.exports = { getCurrentCartItems, getCheckoutData, removeCurrentCartItem, updateCartItem, removeCart }
