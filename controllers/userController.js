@@ -1,5 +1,6 @@
 const userModel = require("../models/User")
 const bcrypt = require("bcrypt")
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
 const signup = async (req, res) => {
     
@@ -21,17 +22,23 @@ const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // User Creation
-        const result = await userModel.create({
+        const stripeCustomer = await stripe.customers.create({
             name : name,
-            email : email,
-            password : hashedPassword,
+            email: email,
         })
-
+        if(stripeCustomer)
+        {
+            const result = await userModel.create({
+                name : name,
+                email : email,
+                password : hashedPassword,
+                stripe_customer : stripeCustomer.id
+            })
+        }
         res.status(201).json({ message : "Account Created!"})
     }
     catch(error){
-        console.log(error);
-        res.status(500).json({ message : "Something went wrong" });
+        res.status(500).json({ message : error.message });
     }
 }
 

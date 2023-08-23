@@ -7,9 +7,8 @@ const checkout = async()=>{
             { id : 2, quantity : 1 }
         ]
     }
-    await axios.post('/checkout/create-checkout-session', data)
+    await axios.post('/checkout/process-order', data)
     .then(response => {
-        console.log(response.data)
         if(response.status === 201) return response.data
         return response.json().then(json => Promise.reject(json))
     })
@@ -19,8 +18,9 @@ const checkout = async()=>{
     })
     .catch(error => {
         const status = error.response.status
+        console.log(error)
         if(status == 404 ||status == 400 || status == 500){
-            $.notify(error.response.data.message, "error");
+            $.notify(error.response.data.error, "error");
         }
     });
 }
@@ -51,7 +51,6 @@ const updateCart = async (itemid, changeby)=>{
         if(response.status == 201) // data received
         {
             // $.notify(response.data.message, "success");
-            console.log(response.data)
             updateHtmlComponent(response.data.result)
             loadCheckoutDOM()
         }
@@ -81,7 +80,6 @@ const removeItemFromCart = async (itemid)=>{
             {
                 $.notify(response.data.message, "success");
                 
-                console.log(response.data)
                 deleteFromDOM(response.data.result._id)
                 loadCheckoutDOM()
             }

@@ -1,6 +1,11 @@
 const cartModel = require("../models/Cart")
 const pantryModel = require("../models/Pantry")
 
+
+/* -------------------------------------------------------------------------- */
+/*                              HELPER FUNCTIONS                              */
+/* -------------------------------------------------------------------------- */
+
 const insertItemInfoInCartItemsHELPER = async (resl)=>{
     const len = resl.cartItems.length
     let data = []
@@ -15,10 +20,20 @@ const insertItemInfoInCartItemsHELPER = async (resl)=>{
             copy.item_price = pantryItem.item_price
             data.push(copy);
         }
+        else{
+            throw new Error(`Item ID : ${copy.itemid} not found in Pantry`)
+        }
     }
     return data
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                     END                                    */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                             MAIN DRIVER FUNCION                            */
+/* -------------------------------------------------------------------------- */
 
 const addCheckoutANDCartData = async (req, res, next)=>{
     const getData = (cart)=>{
@@ -40,10 +55,10 @@ const addCheckoutANDCartData = async (req, res, next)=>{
     const userid = req.cookies.userid;
     try{
         const result = await cartModel.findOne({"userid": userid})
+        if(result === null || result.cartItems.length <= 0) throw new Error("Cart is Empty!")
         const cart =  await insertItemInfoInCartItemsHELPER(result)
-
         const checkoutData = getData(cart)
-        // console.log(cart)
+
         req.cartItems = cart
         req.checkoutData = checkoutData;
         next()

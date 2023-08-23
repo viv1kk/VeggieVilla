@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/get-current-cart-items', addCheckoutANDCartData, getCurrentCartItems)
 router.post('/get-checkout-data', addCheckoutANDCartData, getCheckoutData)
 router.post('/remove-current-cart-item', removeCurrentCartItem)
-router.post('/update-cart', checkCart, addCheckoutANDCartData, updateCartItem)
+router.post('/update-cart', checkCart, updateCartItem)
 router.post('/remove-cart', removeCart)
 
 

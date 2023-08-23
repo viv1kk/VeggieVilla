@@ -1,7 +1,10 @@
 const mongoose = require('./connection')
 
 const cartSchema = new mongoose.Schema({
-    userid : String,
+    userid : {
+        type:String,
+        unique : true
+    },
     cartItems : [{
         itemid: String,
         quantity: Number,

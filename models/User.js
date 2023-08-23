@@ -33,6 +33,10 @@ const UserSchema = new mongoose.Schema({
   dob : {
     type : Date,
   },
+  stripe_customer : {
+    type : String,
+    default : null
+  }
 })
 
 const User = mongoose.model('User', UserSchema)

@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 
 const path = require('path')
+const cors = require('cors')
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
 const app = express()
@@ -18,27 +19,38 @@ const userRoute = require("./routes/user")
 const cartRoute = require("./routes/cart")
 const checkoutRoute = require("./routes/checkout")
 
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   console.log("HTTP Method - " + req.method + ", URL - "+ req.url);
   next();
 })
 
-app.use(express.json({limit : '50mb'}))
+
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json({
+  limit : '50mb',
+  verify: function (req, res, buf) {
+    if (req.originalUrl.startsWith('/checkout/web')) {
+      req.rawBody = buf.toString();
+    }
+  },
+}))
 app.use(cookieParser())
 app.use(session({
   secret : "secret",
   resave : false,
   saveUninitialized : false,
-
+  
   cookie: { maxAge: 60*60*1000 }
 }))
+app.use(cors())
+
+app.use("/checkout", checkoutRoute)
 app.use("/auth", authRoute)
 app.use("/pantry", pantryRoute)
 app.use("/user", userRoute)
 app.use("/cart", cartRoute)
-app.use("/checkout", checkoutRoute)
 
 const isAuthenticated = (req)=>{
   if(req.cookies.userid){
