@@ -7,7 +7,8 @@ const orderHistorySchema = new mongoose.Schema({
         {
             cartItems : [],
             stripe_session_object : {},
-            stripe_session_success : {}
+            stripe_session_success : {},
+            createdAt : Date
         }
     ]
 })

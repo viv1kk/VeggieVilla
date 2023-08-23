@@ -41,10 +41,11 @@ const createOrderHistory = async (order, stripesSuccessObject)=>{
     const obj = { 
         cartItems : order.cartItems,
         stripe_session_object : order.stripe_session_object,
-        stripe_session_success : stripesSuccessObject
+        stripe_session_success : stripesSuccessObject,
+        createdAt : new Date()
     }
     console.log(obj)
-    const history = await orderHistoryModel.findOneAndUpdate({userid : userid}, {$push : { order : obj}})
+    const history = await orderHistoryModel.findOneAndUpdate({userid : userid}, {$push : { orders : obj}})
     console.log(history)
 }
 
