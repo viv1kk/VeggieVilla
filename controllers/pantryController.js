@@ -1,8 +1,20 @@
 const pantryModel = require("../models/Pantry");
 
 
-
+// only the ones that are present in Stock
 const getItems = async(req, res)=>{
+    try{
+        const items = await pantryModel.find({item_available_qt : {$gt : 0}})
+        res.status(201).json(items)
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({ message : "Something went wrong" });
+    }
+}
+
+// get all will include the items that are not present in the stock
+const getAllItems = async(req, res)=>{
     try{
         const items = await pantryModel.find()
         res.status(201).json(items)
@@ -33,6 +45,24 @@ const addItem = async(req, res)=>{
 }
 
 
+// Right now only item quantity can be updated
+const updateItem = async(req, res)=>{
+    const item  = req.body;
+    try{
+        // Check Existing Entry
+        console.log(item)
+        const existingItem = await pantryModel.findOneAndUpdate({_id:item.itemid}, {$set:{item_available_qt : item.quantity}},{new:true})
+        if(!existingItem){
+            throw new Error("Item not Found")
+        }
+        res.status(201).json({message : existingItem})
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({ message : error.message});
+    }
+}
+ 
 const removeItem = async(req, res)=>{
     const { item_name } = req.body;
     try{
@@ -50,4 +80,4 @@ const removeItem = async(req, res)=>{
     }
 }
 
-module.exports = { addItem, getItems, removeItem }
+module.exports = { addItem, getItems, getAllItems, updateItem, removeItem }

@@ -134,6 +134,10 @@ const individualItem = (item)=>{
 
 const loadCartDOM = (data)=>{
     const cartItems = document.getElementById('cart-items')
+    if(data.length === 0)
+    {
+        cartItems.innerHTML  += `<div style="margin:3rem 0" ><center><h1>Cart is Empty!</h1></center></div>`
+    }
 
     // sort by CreatedAt in recent first order
     data = data.sort(function(a, b) {
@@ -176,7 +180,11 @@ const checkoutHTMLComponent = (data)=>{
 const loadCheckoutDOM = async()=>{
     let data = await getCheckoutData()
     const cartChk = document.getElementById('cart-total')
-    cartChk.innerHTML = checkoutHTMLComponent(data)
+    if(data)
+        cartChk.innerHTML = checkoutHTMLComponent(data)
+    else
+        cartChk.innerHTML = "<center>ADD ITEMS</center>"
+
 }
 
 const loadDatainDOM = (data)=>{
@@ -218,6 +226,7 @@ const getCartData = async()=>{
             const status = error.response.status
             if(status == 404 ||status == 400 || status == 500)
             {
+                console.log(error)
                 $.notify(error.response.data.message, "error");
             }
         });
