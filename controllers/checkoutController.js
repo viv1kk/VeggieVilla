@@ -157,7 +157,6 @@ const createCheckoutSession = async (req, res)=>{
     const stripeCustomerID = req.stripe_customer
     const userid = req.userid
     try{
-
         // data not yet fetched from the OrderProcessing
         const stripeSession = await createStripeSession(stripeCustomerID, cartItems, checkoutData)
         await orderProcessingModel.updateOne({userid : userid}, {$set : {stripe_session_object : stripeSession}})

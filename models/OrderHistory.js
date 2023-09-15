@@ -14,5 +14,4 @@ const orderHistorySchema = new mongoose.Schema({
 })
 
 const orderHistory = mongoose.model('OrderHistory', orderHistorySchema)
-
 module.exports = orderHistory;

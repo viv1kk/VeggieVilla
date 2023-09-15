@@ -7,9 +7,9 @@ const individualItem = (item)=>{
         <div class="item-content">
             <h3 class="item-name">${item.item_name}</h3>
             <div class="item-info">
-                <span><span>${item.item_available_qt}</span> Kg</span>
+                <span><small>In Stock</small><br><span>${item.item_available_qt}</span> Kg</span>
                 <button class="btn" id=${item._id} onclick="addtoCart('${item._id}', '${item.item_name}')"><i class="fa-solid fa-cart-plus fa-2xl"></i></button>
-                <span><i class="fa-solid fa-indian-rupee-sign"></i> <span>${parseFloat(item.item_price).toFixed(2)}</span></span>
+                <span><small>Price</small><br><i class="fa-solid fa-indian-rupee-sign"></i> <span>${parseFloat(item.item_price).toFixed(2)}</span></span>
             </div>
         </div>
     </div>`

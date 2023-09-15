@@ -80,4 +80,27 @@ const removeItem = async(req, res)=>{
     }
 }
 
-module.exports = { addItem, getItems, getAllItems, updateItem, removeItem }
+
+const addInBulk = async (req, res)=>{
+    let items = await req.body.data
+    // console.log(items)
+    try{
+        for(let i = 0; i < items.length; i++)
+        {
+            await pantryModel.create({
+                img : `../assets/pantryItems/${items[i].item_name.toLowerCase().split(' ').join('_')}.png`,
+                item_name : items[i].item_name,
+                item_available_qt : items[i].item_available_qt,
+                item_price : items[i].item_price,
+                item_category : items[i].item_category
+            })
+        }
+        res.status(200).json({message : "All items added Successfully"})
+    }
+    catch(error)
+    {
+        res.status(500).json({message : error.message})
+    }
+}
+
+module.exports = { addItem, getItems, getAllItems, updateItem, removeItem, addInBulk }

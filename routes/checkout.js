@@ -9,7 +9,6 @@ const { pushtoTransit } = require('../middlewares/pushtoTransit')
 
 
 const addUserStripeID = require('../middlewares/addUserStripeID')
-
 router.post('/process-order', auth, addCheckoutANDCartData, addUserStripeID, validateOrder, pushtoTransit, createCheckoutSession)
 router.post('/webhook', express.raw({type: 'application/json'}), stripeWebHookResponse);
 

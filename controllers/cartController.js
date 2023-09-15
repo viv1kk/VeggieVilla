@@ -26,7 +26,7 @@ const getCheckoutData = async (req, res)=>{
 }
 
 const removeCurrentCartItem = async (req, res)=>{
-    const userid = req.cookies.userid
+    const userid = req.userid
     const { itemid } = req.body;
 
     // Also make check whether ther item is avaliable
@@ -65,7 +65,8 @@ const updateCartItem = async (req, res, next)=>{
         return 1
     }
 
-    const userid = req.cookies.userid
+    // const userid = req.cookies.userid
+    const userid = req.userid
     const {itemid, quantity} = req.body;
 
     // Also make check whether ther item is avaliable

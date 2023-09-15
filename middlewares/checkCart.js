@@ -2,7 +2,8 @@ const cartModel = require("../models/Cart")
 
 const checkCart = async (req, res, next) => {
     try{
-        const userid = req.cookies.userid;
+        // const userid = req.cookies.userid;
+        const userid = req.userid
         const findCart = await cartModel.findOne({ userid : userid })
         if(!findCart)
         {

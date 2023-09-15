@@ -52,6 +52,7 @@ const deleteUser = async(req, res)=>{
             return res.status(404).json({ message : "User not found" })
         }
         await userModel.deleteOne({ email : email })
+        await stripe.customers.del(existingUser.stripe_customer); // remains to verify from sever side
         res.status(201).json({ message : "Deleted User Successful ", user : existingUser})
     }
     catch(error){
@@ -63,13 +64,19 @@ const deleteUser = async(req, res)=>{
 const getUserProfile = async (req, res)=>{
     // res.status(201).json({ message : req.session.userid})
     // TODO: filter the data before sending the data  
-    const userid = req.cookies.userid;
-    const userinfo = await userModel.findOne({_id : userid });
-    res.status(201).json(userinfo)
+    try{
+        const userid = req.userid
+        const userinfo = await userModel.findOne({_id : userid });
+        res.status(201).json(userinfo)
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({ message : "Something went wrong" });
+    }
 }
 
 const updateUserProfile = async (req, res)=>{ 
-    const userid = req.cookies.userid;
+    const userid = req.userid
     let data = req.body
     // assuming data comes filtered.
     try{
